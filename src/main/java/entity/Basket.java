@@ -17,9 +17,9 @@ import java.util.UUID;
 public class Basket {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "basket_id")
-    private UUID basketId;
+    private int basketId;
 
     @OneToOne
     @JoinColumn(name = "user_id")

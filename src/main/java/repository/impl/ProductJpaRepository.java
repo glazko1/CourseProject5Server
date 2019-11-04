@@ -24,7 +24,7 @@ public class ProductJpaRepository implements ProductRepository {
     private SessionFactory sessionFactory = AppConfig.getInstance().getSessionFactory();
 
     @Override
-    public Product get(UUID productId) throws RepositoryException {
+    public Product get(int productId) throws RepositoryException {
         try (Session session = sessionFactory.openSession()) {
             return session.createQuery("FROM Product WHERE productId = ?1", Product.class)
                     .setParameter(1, productId)

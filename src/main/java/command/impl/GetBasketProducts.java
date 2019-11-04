@@ -30,7 +30,7 @@ public class GetBasketProducts implements Command {
     @Override
     public ServerResponse execute() throws CommandException {
         Map<String, Object> data = request.getData();
-        UUID userId = UUID.fromString((String) data.get("userId"));
+        int userId = (int) data.get("userId");
         try {
             Basket basket = service.getBasket(userId);
             System.out.println(basket.getProducts());

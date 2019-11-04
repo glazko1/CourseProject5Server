@@ -75,7 +75,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Basket getBasket(UUID userId) throws ServiceException {
+    public Basket getBasket(int userId) throws ServiceException {
         try {
             return basketRepository.get(userId);
         } catch (RepositoryException e) {
@@ -84,7 +84,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void addProductToBasket(UUID userId, UUID productId) throws ServiceException {
+    public void addProductToBasket(int userId, int productId) throws ServiceException {
         try {
             Basket basket = basketRepository.get(userId);
             Product product = productRepository.get(productId);
@@ -95,7 +95,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void removeProductFromBasket(UUID userId, UUID productId) throws ServiceException {
+    public void removeProductFromBasket(int userId, int productId) throws ServiceException {
         try {
             Basket basket = basketRepository.get(userId);
             Product product = productRepository.get(productId);

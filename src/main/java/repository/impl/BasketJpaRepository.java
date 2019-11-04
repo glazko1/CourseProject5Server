@@ -25,7 +25,7 @@ public class BasketJpaRepository implements BasketRepository {
     private SessionFactory sessionFactory = AppConfig.getInstance().getSessionFactory();
 
     @Override
-    public Basket get(UUID userId) throws RepositoryException {
+    public Basket get(int userId) throws RepositoryException {
         try (Session session = sessionFactory.openSession()) {
             return session.createQuery("SELECT b FROM Basket b JOIN User u ON b.user.userId = u.userId", Basket.class)
                     .uniqueResult();

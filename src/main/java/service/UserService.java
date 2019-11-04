@@ -14,7 +14,7 @@ public interface UserService {
     void signUp(String username, String firstName, String lastName,
                 String email, String password, int avatarNumber) throws ServiceException;
     List<Product> getAllProducts() throws ServiceException;
-    Basket getBasket(UUID userId) throws ServiceException;
-    void addProductToBasket(UUID userId, UUID productId) throws ServiceException;
-    void removeProductFromBasket(UUID userId, UUID productId) throws ServiceException;
+    Basket getBasket(int userId) throws ServiceException;
+    void addProductToBasket(int userId, int productId) throws ServiceException;
+    void removeProductFromBasket(int userId, int productId) throws ServiceException;
 }

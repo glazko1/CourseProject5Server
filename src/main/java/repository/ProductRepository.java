@@ -8,6 +8,6 @@ import java.util.UUID;
 
 public interface ProductRepository {
 
-    Product get(UUID productId) throws RepositoryException;
+    Product get(int productId) throws RepositoryException;
     List<Product> getAll() throws RepositoryException;
 }

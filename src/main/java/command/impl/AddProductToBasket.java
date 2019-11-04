@@ -26,8 +26,8 @@ public class AddProductToBasket implements Command {
     @Override
     public ServerResponse execute() throws CommandException {
         Map<String, Object> data = request.getData();
-        UUID userId = UUID.fromString((String) data.get("userId"));
-        UUID productId = UUID.fromString((String) data.get("productId"));
+        int userId = (int) data.get("userId");
+        int productId = (int) data.get("productId");
         try {
             service.addProductToBasket(userId, productId);
         } catch (ServiceException e) {

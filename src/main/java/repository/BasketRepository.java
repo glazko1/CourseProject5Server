@@ -8,7 +8,7 @@ import java.util.UUID;
 
 public interface BasketRepository {
 
-    Basket get(UUID userId) throws RepositoryException;
+    Basket get(int userId) throws RepositoryException;
     void addProduct(Basket basket, Product product) throws RepositoryException;
     void removeProduct(Basket basket, Product product) throws RepositoryException;
 }
