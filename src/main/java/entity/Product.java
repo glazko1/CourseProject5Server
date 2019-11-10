@@ -14,6 +14,13 @@ import java.util.UUID;
 @AllArgsConstructor
 public class Product {
 
+    public Product(String productName, Department department, String imagePath, double price) {
+        this.productName = productName;
+        this.department = department;
+        this.imagePath = imagePath;
+        this.price = price;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "product_id")

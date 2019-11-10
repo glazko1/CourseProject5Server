@@ -8,6 +8,6 @@ import java.util.List;
 public interface UserRepository {
 
     List<User> getAll() throws RepositoryException;
-    User getUser(String username, String password) throws RepositoryException;
-    void addUser(User user) throws RepositoryException;
+    User get(String username, String password) throws RepositoryException;
+    void add(User user) throws RepositoryException;
 }

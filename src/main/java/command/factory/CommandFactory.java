@@ -28,15 +28,15 @@ public class CommandFactory {
             case "getAllProducts":
                 return new GetAllProductsCommand(request, response);
             case "getBasketProducts":
-                return new GetBasketProducts(request, response);
+                return new GetBasketProductsCommand(request, response);
             case "addProductToBasket":
-                return new AddProductToBasket(request, response);
+                return new AddProductToBasketCommand(request, response);
             case "removeProductFromBasket":
-                return new RemoveProductFromBasket(request, response);
+                return new RemoveProductFromBasketCommand(request, response);
 //            case "getAllCollections":
 //                return new GetAllCollectionsCommand(request, response);
-//            case "addProduct":
-//                return new AddProductCommand(request, response);
+            case "addProduct":
+                return new AddProductCommand(request, response);
 //            case "deleteProduct":
 //                return new DeleteProductCommand(request, response);
 //            case "addAnalysis":

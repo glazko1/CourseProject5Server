@@ -4,12 +4,12 @@ import entity.Product;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import repository.ProductRepository;
 import repository.exception.RepositoryException;
 import util.config.AppConfig;
 
 import java.util.List;
-import java.util.UUID;
 
 public class ProductJpaRepository implements ProductRepository {
 
@@ -24,6 +24,16 @@ public class ProductJpaRepository implements ProductRepository {
     private SessionFactory sessionFactory = AppConfig.getInstance().getSessionFactory();
 
     @Override
+    public List<Product> getAll() throws RepositoryException {
+        try (Session session = sessionFactory.openSession()) {
+            return session.createQuery("FROM Product", Product.class)
+                    .list();
+        } catch (HibernateException e) {
+            throw new RepositoryException(e);
+        }
+    }
+
+    @Override
     public Product get(int productId) throws RepositoryException {
         try (Session session = sessionFactory.openSession()) {
             return session.createQuery("FROM Product WHERE productId = ?1", Product.class)
@@ -35,11 +45,16 @@ public class ProductJpaRepository implements ProductRepository {
     }
 
     @Override
-    public List<Product> getAll() throws RepositoryException {
+    public void add(Product product) throws RepositoryException {
+        Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
-            return session.createQuery("FROM Product", Product.class)
-                    .list();
+            transaction = session.beginTransaction();
+            session.save(product);
+            transaction.commit();
         } catch (HibernateException e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
             throw new RepositoryException(e);
         }
     }

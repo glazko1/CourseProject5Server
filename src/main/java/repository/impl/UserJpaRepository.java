@@ -34,7 +34,7 @@ public class UserJpaRepository implements UserRepository {
     }
 
     @Override
-    public User getUser(String username, String password) throws RepositoryException {
+    public User get(String username, String password) throws RepositoryException {
         try (Session session = sessionFactory.openSession()) {
             return session.createQuery("FROM User WHERE username = ?1 AND password = ?2", User.class)
                     .setParameter(1, username)
@@ -46,7 +46,7 @@ public class UserJpaRepository implements UserRepository {
     }
 
     @Override
-    public void addUser(User user) throws RepositoryException {
+    public void add(User user) throws RepositoryException {
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();

@@ -16,7 +16,6 @@ import service.exception.ServiceException;
 import util.validator.UserInformationValidator;
 
 import java.util.List;
-import java.util.UUID;
 
 public class UserServiceImpl implements UserService {
 
@@ -39,7 +38,7 @@ public class UserServiceImpl implements UserService {
             throw new ServiceException("Information is not valid!");
         }
         try {
-            User user = userRepository.getUser(username, password);
+            User user = userRepository.get(username, password);
             if (user.isBanned()) {
                 throw new ServiceException("User is banned!");
             }
@@ -59,7 +58,7 @@ public class UserServiceImpl implements UserService {
                 new UserStatus(2, "User"),
                 email, false, avatarNumber, password);
         try {
-            userRepository.addUser(user);
+            userRepository.add(user);
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }

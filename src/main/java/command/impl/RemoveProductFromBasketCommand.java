@@ -9,15 +9,14 @@ import util.cooperation.ClientRequest;
 import util.cooperation.ServerResponse;
 
 import java.util.Map;
-import java.util.UUID;
 
-public class AddProductToBasket implements Command {
+public class RemoveProductFromBasketCommand implements Command {
 
     private UserService service;
     private ClientRequest request;
     private ServerResponse response;
 
-    public AddProductToBasket(ClientRequest request, ServerResponse response) {
+    public RemoveProductFromBasketCommand(ClientRequest request, ServerResponse response) {
         this.service = UserServiceImpl.getInstance();
         this.request = request;
         this.response = response;
@@ -29,7 +28,7 @@ public class AddProductToBasket implements Command {
         int userId = (int) data.get("userId");
         int productId = (int) data.get("productId");
         try {
-            service.addProductToBasket(userId, productId);
+            service.removeProductFromBasket(userId, productId);
         } catch (ServiceException e) {
             throw new CommandException(e);
         }

@@ -2,8 +2,6 @@ package command.impl;
 
 import command.Command;
 import command.exception.CommandException;
-import service.UserService;
-import service.impl.UserServiceImpl;
 import util.cooperation.ClientRequest;
 import util.cooperation.ServerResponse;
 
@@ -29,12 +27,12 @@ public class SendImageCommand implements Command {
             String imageString = (String) data.get("image");
             String name = (String) data.get("name");
             byte[] imageData = Base64.getDecoder().decode(imageString);
-            FileOutputStream imageStream = new FileOutputStream("E:\\Java\\CourseProject5\\Server\\src\\main\\resources\\img" + "\\" + name);
+            FileOutputStream imageStream = new FileOutputStream("E:\\Java\\CourseProject5\\Server\\src\\main\\resources\\img" + "\\" + name + ".jpg");
             imageStream.write(imageData);
             imageStream.close();
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            throw new CommandException(e);
         }
-        return null;
+        return response;
     }
 }
