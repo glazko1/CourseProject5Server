@@ -33,8 +33,8 @@ public class CommandFactory {
                 return new AddProductToBasketCommand(request, response);
             case "removeProductFromBasket":
                 return new RemoveProductFromBasketCommand(request, response);
-//            case "getAllCollections":
-//                return new GetAllCollectionsCommand(request, response);
+            case "getAllDepartments":
+                return new GetAllDepartmentsCommand(request, response);
             case "addProduct":
                 return new AddProductCommand(request, response);
 //            case "deleteProduct":

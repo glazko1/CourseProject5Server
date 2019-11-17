@@ -1,14 +1,13 @@
 package service.impl;
 
-import entity.Basket;
-import entity.Product;
-import entity.User;
-import entity.UserStatus;
+import entity.*;
 import repository.BasketRepository;
+import repository.DepartmentRepository;
 import repository.ProductRepository;
 import repository.UserRepository;
 import repository.exception.RepositoryException;
 import repository.impl.BasketJpaRepository;
+import repository.impl.DepartmentJpaRepository;
 import repository.impl.ProductJpaRepository;
 import repository.impl.UserJpaRepository;
 import service.UserService;
@@ -30,6 +29,7 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository = UserJpaRepository.getInstance();
     private ProductRepository productRepository = ProductJpaRepository.getInstance();
     private BasketRepository basketRepository = BasketJpaRepository.getInstance();
+    private DepartmentRepository departmentRepository = DepartmentJpaRepository.getInstance();
     private UserInformationValidator userValidator = UserInformationValidator.getInstance();
 
     @Override
@@ -99,6 +99,15 @@ public class UserServiceImpl implements UserService {
             Basket basket = basketRepository.get(userId);
             Product product = productRepository.get(productId);
             basketRepository.removeProduct(basket, product);
+        } catch (RepositoryException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public List<Department> getAllDepartments() throws ServiceException {
+        try {
+            return departmentRepository.getAll();
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }

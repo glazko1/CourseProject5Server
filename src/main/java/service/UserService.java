@@ -1,6 +1,7 @@
 package service;
 
 import entity.Basket;
+import entity.Department;
 import entity.Product;
 import entity.User;
 import service.exception.ServiceException;
@@ -17,4 +18,5 @@ public interface UserService {
     Basket getBasket(int userId) throws ServiceException;
     void addProductToBasket(int userId, int productId) throws ServiceException;
     void removeProductFromBasket(int userId, int productId) throws ServiceException;
+    List<Department> getAllDepartments() throws ServiceException;
 }

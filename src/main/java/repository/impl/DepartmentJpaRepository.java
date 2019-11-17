@@ -8,6 +8,8 @@ import repository.DepartmentRepository;
 import repository.exception.RepositoryException;
 import util.config.AppConfig;
 
+import java.util.List;
+
 public class DepartmentJpaRepository implements DepartmentRepository {
 
     private static final DepartmentJpaRepository INSTANCE = new DepartmentJpaRepository();
@@ -19,6 +21,16 @@ public class DepartmentJpaRepository implements DepartmentRepository {
     private DepartmentJpaRepository() {}
 
     private SessionFactory sessionFactory = AppConfig.getInstance().getSessionFactory();
+
+    @Override
+    public List<Department> getAll() throws RepositoryException {
+        try (Session session = sessionFactory.openSession()) {
+            return session.createQuery("FROM Department", Department.class)
+                    .list();
+        } catch (HibernateException e) {
+            throw new RepositoryException(e);
+        }
+    }
 
     @Override
     public Department get(int departmentId) throws RepositoryException {
