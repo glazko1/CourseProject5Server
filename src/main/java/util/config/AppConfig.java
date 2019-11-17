@@ -39,6 +39,10 @@ public class AppConfig {
         configuration.addAnnotatedClass(Product.class);
         configuration.addAnnotatedClass(Department.class);
         configuration.addAnnotatedClass(Basket.class);
+        configuration.addAnnotatedClass(Address.class);
+        configuration.addAnnotatedClass(News.class);
+        configuration.addAnnotatedClass(Order.class);
+        configuration.addAnnotatedClass(OrderStatus.class);
         return configuration;
     }
 

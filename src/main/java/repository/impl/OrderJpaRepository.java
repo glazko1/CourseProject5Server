@@ -1,32 +1,32 @@
 package repository.impl;
 
-import entity.Product;
+import entity.Order;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import repository.ProductRepository;
+import repository.OrderRepository;
 import repository.exception.RepositoryException;
 import util.config.AppConfig;
 
 import java.util.List;
 
-public class ProductJpaRepository implements ProductRepository {
+public class OrderJpaRepository implements OrderRepository {
 
-    private static final ProductJpaRepository INSTANCE = new ProductJpaRepository();
+    private static final OrderJpaRepository INSTANCE = new OrderJpaRepository();
 
-    public static ProductJpaRepository getInstance() {
+    public static OrderJpaRepository getInstance() {
         return INSTANCE;
     }
 
-    private ProductJpaRepository() {}
+    private OrderJpaRepository() {}
 
     private SessionFactory sessionFactory = AppConfig.getInstance().getSessionFactory();
 
     @Override
-    public List<Product> getAll() throws RepositoryException {
+    public List<Order> getAll() throws RepositoryException {
         try (Session session = sessionFactory.openSession()) {
-            return session.createQuery("FROM Product", Product.class)
+            return session.createQuery("FROM Order", Order.class)
                     .list();
         } catch (HibernateException e) {
             throw new RepositoryException(e);
@@ -34,10 +34,10 @@ public class ProductJpaRepository implements ProductRepository {
     }
 
     @Override
-    public Product get(int productId) throws RepositoryException {
+    public Order get(int orderId) throws RepositoryException {
         try (Session session = sessionFactory.openSession()) {
-            return session.createQuery("FROM Product WHERE productId = ?1", Product.class)
-                    .setParameter(1, productId)
+            return session.createQuery("FROM Order WHERE orderId = ?1", Order.class)
+                    .setParameter(1, orderId)
                     .uniqueResult();
         } catch (HibernateException e) {
             throw new RepositoryException(e);
@@ -45,26 +45,22 @@ public class ProductJpaRepository implements ProductRepository {
     }
 
     @Override
-    public void add(Product product) throws RepositoryException {
-        Transaction transaction = null;
+    public List<Order> getByUserId(int userId) throws RepositoryException {
         try (Session session = sessionFactory.openSession()) {
-            transaction = session.beginTransaction();
-            session.save(product);
-            transaction.commit();
+            return session.createQuery("FROM Order WHERE user.userId = ?1", Order.class)
+                    .setParameter(1, userId)
+                    .list();
         } catch (HibernateException e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
             throw new RepositoryException(e);
         }
     }
 
     @Override
-    public void update(Product product) throws RepositoryException {
+    public void add(Order order) throws RepositoryException {
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
-            session.update(product);
+            session.save(order);
             transaction.commit();
         } catch (HibernateException e) {
             if (transaction != null) {

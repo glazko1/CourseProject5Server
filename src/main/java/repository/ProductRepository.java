@@ -10,4 +10,5 @@ public interface ProductRepository {
     List<Product> getAll() throws RepositoryException;
     Product get(int productId) throws RepositoryException;
     void add(Product product) throws RepositoryException;
+    void update(Product product) throws RepositoryException;
 }

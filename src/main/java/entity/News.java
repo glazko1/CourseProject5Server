@@ -14,6 +14,11 @@ import java.util.Date;
 @AllArgsConstructor
 public class News {
 
+    public News(String newsText, Date newsDateTime) {
+        this.newsText = newsText;
+        this.newsDateTime = newsDateTime;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "news_id")

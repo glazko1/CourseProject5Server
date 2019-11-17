@@ -10,7 +10,7 @@ import repository.BasketRepository;
 import repository.exception.RepositoryException;
 import util.config.AppConfig;
 
-import java.util.UUID;
+import java.util.ArrayList;
 
 public class BasketJpaRepository implements BasketRepository {
 
@@ -27,7 +27,10 @@ public class BasketJpaRepository implements BasketRepository {
     @Override
     public Basket get(int userId) throws RepositoryException {
         try (Session session = sessionFactory.openSession()) {
-            return session.createQuery("SELECT b FROM Basket b JOIN User u ON b.user.userId = u.userId", Basket.class)
+//            return session.createQuery("SELECT b FROM Basket b JOIN User u ON b.user.userId = u.userId", Basket.class)
+//                    .uniqueResult();
+            return session.createQuery("FROM Basket WHERE user.userId = ?1", Basket.class)
+                    .setParameter(1, userId)
                     .uniqueResult();
         } catch (HibernateException e) {
             throw new RepositoryException(e);
@@ -56,6 +59,22 @@ public class BasketJpaRepository implements BasketRepository {
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             basket.removeProduct(product);
+            session.update(basket);
+            transaction.commit();
+        } catch (HibernateException e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            throw new RepositoryException(e);
+        }
+    }
+
+    @Override
+    public void clear(Basket basket) throws RepositoryException {
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+            basket.setProducts(new ArrayList<>());
             session.update(basket);
             transaction.commit();
         } catch (HibernateException e) {

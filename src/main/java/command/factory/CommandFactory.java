@@ -37,6 +37,8 @@ public class CommandFactory {
                 return new GetAllDepartmentsCommand(request, response);
             case "addProduct":
                 return new AddProductCommand(request, response);
+            case "addOrder":
+                return new AddOrderCommand(request, response);
 //            case "deleteProduct":
 //                return new DeleteProductCommand(request, response);
 //            case "addAnalysis":

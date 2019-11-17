@@ -19,4 +19,6 @@ public interface UserService {
     void addProductToBasket(int userId, int productId) throws ServiceException;
     void removeProductFromBasket(int userId, int productId) throws ServiceException;
     List<Department> getAllDepartments() throws ServiceException;
+    void addOrder(int userId, String region, String locality,
+                  String street, int houseNumber, int flatNumber) throws ServiceException;
 }

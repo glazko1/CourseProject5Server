@@ -15,6 +15,16 @@ import java.util.List;
 @AllArgsConstructor
 public class Order {
 
+    public Order(User user, OrderStatus orderStatus, Address address,
+                 Date orderDate, double orderSum, List<Product> products) {
+        this.user = user;
+        this.orderStatus = orderStatus;
+        this.address = address;
+        this.orderDate = orderDate;
+        this.orderSum = orderSum;
+        this.products = products;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "order_id")

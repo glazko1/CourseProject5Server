@@ -1,20 +1,18 @@
 package service.impl;
 
 import entity.*;
-import repository.BasketRepository;
-import repository.DepartmentRepository;
-import repository.ProductRepository;
-import repository.UserRepository;
+import repository.*;
 import repository.exception.RepositoryException;
-import repository.impl.BasketJpaRepository;
-import repository.impl.DepartmentJpaRepository;
-import repository.impl.ProductJpaRepository;
-import repository.impl.UserJpaRepository;
+import repository.impl.*;
 import service.UserService;
 import service.exception.ServiceException;
+import util.validator.OrderInformationValidator;
 import util.validator.UserInformationValidator;
 
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class UserServiceImpl implements UserService {
 
@@ -30,7 +28,10 @@ public class UserServiceImpl implements UserService {
     private ProductRepository productRepository = ProductJpaRepository.getInstance();
     private BasketRepository basketRepository = BasketJpaRepository.getInstance();
     private DepartmentRepository departmentRepository = DepartmentJpaRepository.getInstance();
+    private OrderRepository orderRepository = OrderJpaRepository.getInstance();
+    private AddressRepository addressRepository = AddressJpaRepository.getInstance();
     private UserInformationValidator userValidator = UserInformationValidator.getInstance();
+    private OrderInformationValidator orderValidator = OrderInformationValidator.getInstance();
 
     @Override
     public User signIn(String username, String password) throws ServiceException {
@@ -108,6 +109,60 @@ public class UserServiceImpl implements UserService {
     public List<Department> getAllDepartments() throws ServiceException {
         try {
             return departmentRepository.getAll();
+        } catch (RepositoryException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public void addOrder(int userId, String region, String locality,
+                         String street, int houseNumber, int flatNumber) throws ServiceException {
+        if (!orderValidator.validate(region, locality, street, houseNumber, flatNumber)) {
+            throw new ServiceException("Information is not valid!");
+        }
+        try {
+            Basket basket = basketRepository.get(userId);
+            List<Product> products = basket.getProducts();
+            Map<Product, Integer> productMap = new HashMap<>();
+            products.forEach(product -> {
+                if (productMap.containsKey(product)) {
+                    productMap.replace(product, productMap.get(product) + 1);
+                } else {
+                    productMap.put(product, 1);
+                }
+            });
+            final boolean[] correct = {true};
+            productMap.forEach((product, amount) -> {
+                if (amount > product.getAmount()) {
+                    correct[0] = false;
+                }
+            });
+            if (!correct[0]) {
+                throw new ServiceException("One or more products selected in amount bigger than present!");
+            }
+            Address address = addressRepository.get(region, locality,
+                    street, houseNumber, flatNumber);
+            if (address == null) {
+                addressRepository.add(new Address(region, locality,
+                        street, houseNumber, flatNumber));
+                address = addressRepository.get(region, locality,
+                        street, houseNumber, flatNumber);
+            }
+            User user = userRepository.get(userId);
+            double orderSum = products.stream()
+                    .mapToDouble(Product::getPrice)
+                    .sum();
+            productMap.forEach((product, amount) -> {
+                product.setAmount(product.getAmount() - amount);
+                try {
+                    productRepository.update(product);
+                } catch (RepositoryException e) {
+                    System.out.println(e.getMessage());
+                }
+            });
+            orderRepository.add(new Order(user, new OrderStatus(1, "В обработке"),
+                    address, new Date(System.currentTimeMillis()), orderSum, products));
+            basketRepository.clear(basket);
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }

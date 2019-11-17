@@ -46,6 +46,17 @@ public class UserJpaRepository implements UserRepository {
     }
 
     @Override
+    public User get(int userId) throws RepositoryException {
+        try (Session session = sessionFactory.openSession()) {
+            return session.createQuery("FROM User WHERE userId = ?1", User.class)
+                    .setParameter(1, userId)
+                    .uniqueResult();
+        } catch (HibernateException e) {
+            throw new RepositoryException(e);
+        }
+    }
+
+    @Override
     public void add(User user) throws RepositoryException {
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {

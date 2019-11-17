@@ -16,6 +16,11 @@ import java.util.UUID;
 @AllArgsConstructor
 public class Basket {
 
+    public Basket(User user, List<Product> products) {
+        this.user = user;
+        this.products = products;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "basket_id")

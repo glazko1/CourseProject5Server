@@ -9,5 +9,6 @@ public interface UserRepository {
 
     List<User> getAll() throws RepositoryException;
     User get(String username, String password) throws RepositoryException;
+    User get(int userId) throws RepositoryException;
     void add(User user) throws RepositoryException;
 }
