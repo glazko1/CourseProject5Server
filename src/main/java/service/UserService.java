@@ -1,9 +1,6 @@
 package service;
 
-import entity.Basket;
-import entity.Department;
-import entity.Product;
-import entity.User;
+import entity.*;
 import service.exception.ServiceException;
 
 import java.util.List;
@@ -21,4 +18,5 @@ public interface UserService {
     List<Department> getAllDepartments() throws ServiceException;
     void addOrder(int userId, String region, String locality,
                   String street, int houseNumber, int flatNumber) throws ServiceException;
+    List<Order> getOrders(int userId) throws ServiceException;
 }

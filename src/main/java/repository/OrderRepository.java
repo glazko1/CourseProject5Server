@@ -11,4 +11,5 @@ public interface OrderRepository {
     Order get(int orderId) throws RepositoryException;
     List<Order> getByUserId(int userId) throws RepositoryException;
     void add(Order order) throws RepositoryException;
+    void update(Order order) throws RepositoryException;
 }

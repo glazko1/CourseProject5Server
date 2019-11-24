@@ -167,4 +167,13 @@ public class UserServiceImpl implements UserService {
             throw new ServiceException(e);
         }
     }
+
+    @Override
+    public List<Order> getOrders(int userId) throws ServiceException {
+        try {
+            return orderRepository.getByUserId(userId);
+        } catch (RepositoryException e) {
+            throw new ServiceException(e);
+        }
+    }
 }
