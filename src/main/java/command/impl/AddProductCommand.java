@@ -29,8 +29,9 @@ public class AddProductCommand implements Command {
         String productName = (String) data.get("productName");
         int departmentId = (int) data.get("departmentId");
         double price = (double) data.get("price");
+        int amount = (int) data.get("amount");
         try {
-            service.addProduct(productName, departmentId, price);
+            service.addProduct(productName, departmentId, price, amount);
         } catch (ServiceException e) {
             throw new CommandException(e);
         }

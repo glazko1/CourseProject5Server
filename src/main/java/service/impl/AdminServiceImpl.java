@@ -32,11 +32,11 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public void addProduct(String productName, int departmentId,
-                           double price) throws ServiceException {
+                           double price, int amount) throws ServiceException {
         try {
             Department department = departmentRepository.get(departmentId);
             String imagePath = "file:/E:/Java/CourseProject5/Server/src/main/resources/img/" + productName + ".jpg";
-            Product product = new Product(productName, department, imagePath, price);
+            Product product = new Product(productName, department, imagePath, price, amount);
             productRepository.add(product);
         } catch (RepositoryException e) {
             throw new ServiceException(e);

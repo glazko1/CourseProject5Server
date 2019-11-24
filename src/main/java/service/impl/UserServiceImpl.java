@@ -56,7 +56,7 @@ public class UserServiceImpl implements UserService {
             throw new ServiceException("Information is not valid!");
         }
         User user = new User(username, firstName, lastName,
-                new UserStatus(2, "User"),
+                new UserStatus(2, "Пользователь"),
                 email, false, avatarNumber, password);
         try {
             userRepository.add(user);
@@ -172,6 +172,15 @@ public class UserServiceImpl implements UserService {
     public List<Order> getOrders(int userId) throws ServiceException {
         try {
             return orderRepository.getByUserId(userId);
+        } catch (RepositoryException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public User getUser(int userId) throws ServiceException {
+        try {
+            return userRepository.get(userId);
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }

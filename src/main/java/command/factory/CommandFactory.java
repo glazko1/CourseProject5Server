@@ -47,18 +47,8 @@ public class CommandFactory {
                 return new ProcessOrderCommand(request, response);
 //            case "deleteProduct":
 //                return new DeleteProductCommand(request, response);
-//            case "addAnalysis":
-//                return new AddAnalysisCommand(request, response);
-//            case "getCurrentAnalyzes":
-//                return new GetAllCurrentAnalyzesCommand(request, response);
-//            case "addEvaluation":
-//                return new AddEvaluationCommand(request, response);
-//            case "getClosedAnalyzes":
-//                return new GetAllClosedAnalyzesCommand(request, response);
-//            case "getEvaluations":
-//                return new GetAnalysisEvaluationsCommand(request, response);
-//            case "getUser":
-//                return new GetUserCommand(request, response);
+            case "getUser":
+                return new GetUserCommand(request, response);
 //            case "changeAvatar":
 //                return new ChangeAvatarCommand(request, response);
 //            case "changeEmail":

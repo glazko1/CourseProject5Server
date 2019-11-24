@@ -15,11 +15,12 @@ import java.util.UUID;
 public class Product {
 
     public Product(String productName, Department department,
-                   String imagePath, double price) {
+                   String imagePath, double price, int amount) {
         this.productName = productName;
         this.department = department;
         this.imagePath = imagePath;
         this.price = price;
+        this.amount = amount;
     }
 
     @Id
