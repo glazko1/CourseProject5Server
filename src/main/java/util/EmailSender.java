@@ -20,8 +20,8 @@ public class EmailSender {
 
     public void sendEmail(String to, String subject, String text) {
         String host = "smtp.inbox.ru";
-        String from = "*****@inbox.ru";
-        String password = "*******";
+        String from = "electricalgoods@mail.ru";
+        String password = "course123";
         Properties properties = System.getProperties();
         properties.setProperty("mail.smtp.host", host);
         properties.put("mail.smtp.user", from);

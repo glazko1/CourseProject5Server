@@ -27,14 +27,17 @@ public class BasketJpaRepository implements BasketRepository {
     @Override
     public Basket get(int userId) throws RepositoryException {
         try (Session session = sessionFactory.openSession()) {
-//            return session.createQuery("SELECT b FROM Basket b JOIN User u ON b.user.userId = u.userId", Basket.class)
-//                    .uniqueResult();
             return session.createQuery("FROM Basket WHERE user.userId = ?1", Basket.class)
                     .setParameter(1, userId)
                     .uniqueResult();
         } catch (HibernateException e) {
             throw new RepositoryException(e);
         }
+    }
+
+    @Override
+    public void add(Basket basket) throws RepositoryException {
+
     }
 
     @Override

@@ -57,6 +57,16 @@ public class UserJpaRepository implements UserRepository {
     }
 
     @Override
+    public User getByUsername(String username) throws RepositoryException {
+        return null;
+    }
+
+    @Override
+    public User getByEmail(String email) throws RepositoryException {
+        return null;
+    }
+
+    @Override
     public void add(User user) throws RepositoryException {
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
@@ -69,5 +79,10 @@ public class UserJpaRepository implements UserRepository {
             }
             throw new RepositoryException(e);
         }
+    }
+
+    @Override
+    public void update(User user) throws RepositoryException {
+
     }
 }

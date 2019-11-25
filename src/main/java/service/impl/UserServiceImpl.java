@@ -12,6 +12,7 @@ import entity.UserStatus;
 import repository.AddressRepository;
 import repository.BasketRepository;
 import repository.DepartmentRepository;
+import repository.NewsRepository;
 import repository.OrderRepository;
 import repository.ProductRepository;
 import repository.UserRepository;
@@ -19,6 +20,7 @@ import repository.exception.RepositoryException;
 import repository.impl.AddressJpaRepository;
 import repository.impl.BasketJpaRepository;
 import repository.impl.DepartmentJpaRepository;
+import repository.impl.NewsJpaRepository;
 import repository.impl.OrderJpaRepository;
 import repository.impl.ProductJpaRepository;
 import repository.impl.UserJpaRepository;
@@ -27,6 +29,7 @@ import service.exception.ServiceException;
 import util.validator.OrderInformationValidator;
 import util.validator.UserInformationValidator;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -48,20 +51,25 @@ public class UserServiceImpl implements UserService {
     private DepartmentRepository departmentRepository = DepartmentJpaRepository.getInstance();
     private OrderRepository orderRepository = OrderJpaRepository.getInstance();
     private AddressRepository addressRepository = AddressJpaRepository.getInstance();
+    private NewsRepository newsRepository = NewsJpaRepository.getInstance();
     private UserInformationValidator userValidator = UserInformationValidator.getInstance();
     private OrderInformationValidator orderValidator = OrderInformationValidator.getInstance();
 
     @Override
     public User signIn(String username, String password) throws ServiceException {
         if (!userValidator.validate(username)) {
-            throw new ServiceException("Information is not valid!");
+            throw new ServiceException("Информация некорректна! Пожалуйста, повторите ввод.");
         }
         try {
             User user = userRepository.get(username, password);
-            if (user.isBanned()) {
-                throw new ServiceException("User is banned!");
+            if (user != null) {
+                if (user.isBanned()) {
+                    throw new ServiceException("Пользователь заблокирован!");
+                }
+                return user;
+            } else {
+                throw new ServiceException("Введен неверный логин и/или пароль. Пожалуйста, повторите ввод.");
             }
-            return user;
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
@@ -71,13 +79,23 @@ public class UserServiceImpl implements UserService {
     public void signUp(String username, String firstName, String lastName,
                        String email, String password, int avatarNumber) throws ServiceException {
         if (!userValidator.validate(username, firstName, lastName, email)) {
-            throw new ServiceException("Information is not valid!");
+            throw new ServiceException("Информация некорректна! Пожалуйста, повторите ввод.");
         }
-        User user = new User(username, firstName, lastName,
-                new UserStatus(2, "Пользователь"),
-                email, false, avatarNumber, password);
         try {
-            userRepository.add(user);
+            User existingUserByUsername = userRepository.getByUsername(username);
+            User existingUserByEmail = userRepository.getByEmail(email);
+            if (existingUserByUsername == null && existingUserByEmail == null) {
+                User user = new User(username, firstName, lastName,
+                        new UserStatus(2, "Пользователь"),
+                        email, false, avatarNumber, password);
+                userRepository.add(user);
+                user = userRepository.getByUsername(username);
+                Basket basket = new Basket(user, new ArrayList<>());
+                basketRepository.add(basket);
+            } else {
+                throw new ServiceException("Пользователь с таким логином и/или адресом эл. почты" +
+                        "уже зарегистрирован! Пожалуйста, повторите ввод.");
+            }
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
@@ -94,27 +112,68 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserByEmail(String email) throws ServiceException {
-        return null;
+        try {
+            return userRepository.getByEmail(email);
+        } catch (RepositoryException e) {
+            throw new ServiceException(e);
+        }
     }
 
     @Override
     public void changeAvatar(int userId, int avatarNumber) throws ServiceException {
-
+        try {
+            User user = userRepository.get(userId);
+            user.setAvatarNumber(avatarNumber);
+            userRepository.update(user);
+        } catch (RepositoryException e) {
+            throw new ServiceException(e);
+        }
     }
 
     @Override
     public void changeEmail(int userId, String newEmail) throws ServiceException {
-
+        if (!userValidator.validateEmail(newEmail)) {
+            throw new ServiceException("Информация некорректна! Пожалуйста, повторите ввод.");
+        }
+        try {
+            User existingUser = userRepository.getByEmail(newEmail);
+            if (existingUser == null) {
+                User user = userRepository.get(userId);
+                user.setEmail(newEmail);
+                userRepository.update(user);
+            } else {
+                throw new ServiceException("Пользователь с таким адресом эл. почты уже зарегистрирован!" +
+                        "Пожалуйста, повторите ввод.");
+            }
+        } catch (RepositoryException e) {
+            throw new ServiceException(e);
+        }
     }
 
     @Override
     public void changePassword(int userId, String currentPassword, String newPassword) throws ServiceException {
-
+        try {
+            User user = userRepository.get(userId);
+            if (currentPassword.equals(user.getPassword())) {
+                user.setPassword(newPassword);
+                userRepository.update(user);
+            } else {
+                throw new ServiceException("Неверный пароль! Пожалуйста, повторите ввод.");
+            }
+        } catch (RepositoryException e) {
+            throw new ServiceException(e);
+        }
     }
 
     @Override
     public void restorePassword(int userId, String password) throws ServiceException {
-
+        try {
+            User user = userRepository.get(userId);
+            user.setPassword(password);
+            userRepository.update(user);
+        } catch (RepositoryException e) {
+            throw new ServiceException(e);
+        }
     }
 
     @Override
@@ -137,7 +196,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<News> getAllNews() throws ServiceException {
-        return null;
+        try {
+            return newsRepository.getAll();
+        } catch (RepositoryException e) {
+            throw new ServiceException(e);
+        }
     }
 
     @Override
@@ -175,7 +238,7 @@ public class UserServiceImpl implements UserService {
     public void addOrder(int userId, String region, String locality,
                          String street, int houseNumber, int flatNumber) throws ServiceException {
         if (!orderValidator.validate(region, locality, street, houseNumber, flatNumber)) {
-            throw new ServiceException("Information is not valid!");
+            throw new ServiceException("Информация некорректна! Пожалуйста, повторите ввод.");
         }
         try {
             Basket basket = basketRepository.get(userId);
@@ -195,7 +258,8 @@ public class UserServiceImpl implements UserService {
                 }
             });
             if (!correct[0]) {
-                throw new ServiceException("One or more products selected in amount bigger than present!");
+                throw new ServiceException("Один или более товаров выбран в размере, превышающем количество" +
+                        "в наличии! Пожалуйста, удалите один или более товаров из корзины.");
             }
             Address address = addressRepository.get(region, locality,
                     street, houseNumber, flatNumber);

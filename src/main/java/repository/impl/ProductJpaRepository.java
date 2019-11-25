@@ -45,6 +45,11 @@ public class ProductJpaRepository implements ProductRepository {
     }
 
     @Override
+    public Product get(String productName) throws RepositoryException {
+        return null;
+    }
+
+    @Override
     public void add(Product product) throws RepositoryException {
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
