@@ -1,9 +1,27 @@
 package service.impl;
 
-import entity.*;
-import repository.*;
+import entity.Address;
+import entity.Basket;
+import entity.Department;
+import entity.News;
+import entity.Order;
+import entity.OrderStatus;
+import entity.Product;
+import entity.User;
+import entity.UserStatus;
+import repository.AddressRepository;
+import repository.BasketRepository;
+import repository.DepartmentRepository;
+import repository.OrderRepository;
+import repository.ProductRepository;
+import repository.UserRepository;
 import repository.exception.RepositoryException;
-import repository.impl.*;
+import repository.impl.AddressJpaRepository;
+import repository.impl.BasketJpaRepository;
+import repository.impl.DepartmentJpaRepository;
+import repository.impl.OrderJpaRepository;
+import repository.impl.ProductJpaRepository;
+import repository.impl.UserJpaRepository;
 import service.UserService;
 import service.exception.ServiceException;
 import util.validator.OrderInformationValidator;
@@ -66,12 +84,60 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User getUser(int userId) throws ServiceException {
+        try {
+            return userRepository.get(userId);
+        } catch (RepositoryException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public User getUserByEmail(String email) throws ServiceException {
+        return null;
+    }
+
+    @Override
+    public void changeAvatar(int userId, int avatarNumber) throws ServiceException {
+
+    }
+
+    @Override
+    public void changeEmail(int userId, String newEmail) throws ServiceException {
+
+    }
+
+    @Override
+    public void changePassword(int userId, String currentPassword, String newPassword) throws ServiceException {
+
+    }
+
+    @Override
+    public void restorePassword(int userId, String password) throws ServiceException {
+
+    }
+
+    @Override
     public List<Product> getAllProducts() throws ServiceException {
         try {
             return productRepository.getAll();
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
+    }
+
+    @Override
+    public List<Department> getAllDepartments() throws ServiceException {
+        try {
+            return departmentRepository.getAll();
+        } catch (RepositoryException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public List<News> getAllNews() throws ServiceException {
+        return null;
     }
 
     @Override
@@ -100,15 +166,6 @@ public class UserServiceImpl implements UserService {
             Basket basket = basketRepository.get(userId);
             Product product = productRepository.get(productId);
             basketRepository.removeProduct(basket, product);
-        } catch (RepositoryException e) {
-            throw new ServiceException(e);
-        }
-    }
-
-    @Override
-    public List<Department> getAllDepartments() throws ServiceException {
-        try {
-            return departmentRepository.getAll();
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
@@ -172,15 +229,6 @@ public class UserServiceImpl implements UserService {
     public List<Order> getOrders(int userId) throws ServiceException {
         try {
             return orderRepository.getByUserId(userId);
-        } catch (RepositoryException e) {
-            throw new ServiceException(e);
-        }
-    }
-
-    @Override
-    public User getUser(int userId) throws ServiceException {
-        try {
-            return userRepository.get(userId);
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }

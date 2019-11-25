@@ -5,7 +5,6 @@ import command.exception.CommandException;
 import service.AdminService;
 import service.exception.ServiceException;
 import service.impl.AdminServiceImpl;
-import service.impl.UserServiceImpl;
 import util.cooperation.ClientRequest;
 import util.cooperation.ServerResponse;
 

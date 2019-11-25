@@ -4,6 +4,7 @@ import entity.Department;
 import entity.Order;
 import entity.OrderStatus;
 import entity.Product;
+import entity.User;
 import repository.DepartmentRepository;
 import repository.OrderRepository;
 import repository.ProductRepository;
@@ -44,6 +45,17 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
+    public void editProduct(int productId, String productName, int departmentId,
+                            double price, int amount) throws ServiceException {
+
+    }
+
+    @Override
+    public void deleteProduct(int productId) throws ServiceException {
+
+    }
+
+    @Override
     public List<Order> getAllOrders() throws ServiceException {
         try {
             return orderRepository.getAll();
@@ -61,5 +73,20 @@ public class AdminServiceImpl implements AdminService {
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
+    }
+
+    @Override
+    public List<User> getAllUsers() throws ServiceException {
+        return null;
+    }
+
+    @Override
+    public void changeBanStatus(int userId) throws ServiceException {
+
+    }
+
+    @Override
+    public void changeUserStatus(int userId, int statusId) throws ServiceException {
+
     }
 }

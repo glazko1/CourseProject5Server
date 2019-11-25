@@ -2,10 +2,16 @@ package command.impl;
 
 import command.Command;
 import command.exception.CommandException;
+import entity.News;
 import service.UserService;
+import service.exception.ServiceException;
 import service.impl.UserServiceImpl;
 import util.cooperation.ClientRequest;
 import util.cooperation.ServerResponse;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class GetAllNewsCommand implements Command {
 
@@ -21,6 +27,14 @@ public class GetAllNewsCommand implements Command {
 
     @Override
     public ServerResponse execute() throws CommandException {
-        return null;
+        try {
+            List<News> news = service.getAllNews();
+            Map<String, Object> data = new HashMap<>();
+            data.put("news", news);
+            response.setData(data);
+        } catch (ServiceException e) {
+            throw new CommandException(e);
+        }
+        return response;
     }
 }

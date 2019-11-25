@@ -3,9 +3,12 @@ package command.impl;
 import command.Command;
 import command.exception.CommandException;
 import service.AdminService;
+import service.exception.ServiceException;
 import service.impl.AdminServiceImpl;
 import util.cooperation.ClientRequest;
 import util.cooperation.ServerResponse;
+
+import java.util.Map;
 
 public class ChangeUserStatusCommand implements Command {
 
@@ -21,6 +24,14 @@ public class ChangeUserStatusCommand implements Command {
 
     @Override
     public ServerResponse execute() throws CommandException {
-        return null;
+        Map<String, Object> data = request.getData();
+        int userId = (int) data.get("userId");
+        int statusId = (int) data.get("statusId");
+        try {
+            service.changeUserStatus(userId, statusId);
+        } catch (ServiceException e) {
+            throw new CommandException(e);
+        }
+        return response;
     }
 }

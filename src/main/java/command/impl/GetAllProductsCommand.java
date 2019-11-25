@@ -9,7 +9,6 @@ import service.impl.UserServiceImpl;
 import util.cooperation.ClientRequest;
 import util.cooperation.ServerResponse;
 
-import javax.sql.rowset.serial.SerialException;
 import java.util.List;
 import java.util.Map;
 
