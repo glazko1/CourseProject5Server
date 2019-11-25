@@ -37,7 +37,17 @@ public class BasketJpaRepository implements BasketRepository {
 
     @Override
     public void add(Basket basket) throws RepositoryException {
-
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+            session.save(basket);
+            transaction.commit();
+        } catch (HibernateException e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            throw new RepositoryException(e);
+        }
     }
 
     @Override

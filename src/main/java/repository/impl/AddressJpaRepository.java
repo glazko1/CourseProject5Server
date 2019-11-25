@@ -23,7 +23,13 @@ public class AddressJpaRepository implements AddressRepository {
 
     @Override
     public Address get(int addressId) throws RepositoryException {
-        return null;
+        try (Session session = sessionFactory.openSession()) {
+            return session.createQuery("FROM Address WHERE addressId = ?1", Address.class)
+                    .setParameter(1, addressId)
+                    .uniqueResult();
+        } catch (HibernateException e) {
+            throw new RepositoryException(e);
+        }
     }
 
     @Override

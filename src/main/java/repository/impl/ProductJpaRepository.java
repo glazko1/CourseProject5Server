@@ -46,7 +46,13 @@ public class ProductJpaRepository implements ProductRepository {
 
     @Override
     public Product get(String productName) throws RepositoryException {
-        return null;
+        try (Session session = sessionFactory.openSession()) {
+            return session.createQuery("FROM Product WHERE productName = ?1", Product.class)
+                    .setParameter(1, productName)
+                    .uniqueResult();
+        } catch (HibernateException e) {
+            throw new RepositoryException(e);
+        }
     }
 
     @Override

@@ -1,6 +1,8 @@
 package repository.impl;
 
 import entity.News;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import repository.NewsRepository;
 import repository.exception.RepositoryException;
@@ -22,6 +24,11 @@ public class NewsJpaRepository implements NewsRepository {
 
     @Override
     public List<News> getAll() throws RepositoryException {
-        return null;
+        try (Session session = sessionFactory.openSession()) {
+            return session.createQuery("FROM Basket", News.class)
+                    .list();
+        } catch (HibernateException e) {
+            throw new RepositoryException(e);
+        }
     }
 }

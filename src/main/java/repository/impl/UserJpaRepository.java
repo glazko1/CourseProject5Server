@@ -58,12 +58,24 @@ public class UserJpaRepository implements UserRepository {
 
     @Override
     public User getByUsername(String username) throws RepositoryException {
-        return null;
+        try (Session session = sessionFactory.openSession()) {
+            return session.createQuery("FROM User WHERE username = ?1", User.class)
+                    .setParameter(1, username)
+                    .uniqueResult();
+        } catch (HibernateException e) {
+            throw new RepositoryException(e);
+        }
     }
 
     @Override
     public User getByEmail(String email) throws RepositoryException {
-        return null;
+        try (Session session = sessionFactory.openSession()) {
+            return session.createQuery("FROM User WHERE email = ?1", User.class)
+                    .setParameter(1, email)
+                    .uniqueResult();
+        } catch (HibernateException e) {
+            throw new RepositoryException(e);
+        }
     }
 
     @Override
@@ -83,6 +95,16 @@ public class UserJpaRepository implements UserRepository {
 
     @Override
     public void update(User user) throws RepositoryException {
-
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+            session.update(user);
+            transaction.commit();
+        } catch (HibernateException e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            throw new RepositoryException(e);
+        }
     }
 }
