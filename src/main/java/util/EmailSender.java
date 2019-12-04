@@ -20,12 +20,11 @@ public class EmailSender {
 
     public void sendEmail(String to, String subject, String text) {
         String host = "smtp.inbox.ru";
-        String from = "electricalgoods@mail.ru";
-        String password = "********";
+        String from = "electricalgoods@inbox.ru";
         Properties properties = System.getProperties();
         properties.setProperty("mail.smtp.host", host);
         properties.put("mail.smtp.user", from);
-        properties.put("mail.smtp.password", password);
+        properties.put("mail.smtp.password", "course123");
         properties.put("mail.smtp.starttls.enable", "true");
         properties.put("mail.smtp.auth", "true");
         Session session = Session.getInstance(properties);
@@ -35,7 +34,7 @@ public class EmailSender {
             message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
             message.setSubject(subject);
             message.setText(text);
-            Transport.send(message, from, password);
+            Transport.send(message, "electricalgoods@inbox.ru", "course123");
         } catch (MessagingException e) {
             e.printStackTrace();
         }

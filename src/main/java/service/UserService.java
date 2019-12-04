@@ -45,4 +45,5 @@ public interface UserService {
     void addOrder(int userId, String region, String locality,
                   String street, int houseNumber, int flatNumber) throws ServiceException;
     List<Order> getOrders(int userId) throws ServiceException;
+    void cancelOrder(int orderId) throws ServiceException;
 }

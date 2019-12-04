@@ -25,7 +25,7 @@ public class NewsJpaRepository implements NewsRepository {
     @Override
     public List<News> getAll() throws RepositoryException {
         try (Session session = sessionFactory.openSession()) {
-            return session.createQuery("FROM Basket", News.class)
+            return session.createQuery("FROM News", News.class)
                     .list();
         } catch (HibernateException e) {
             throw new RepositoryException(e);

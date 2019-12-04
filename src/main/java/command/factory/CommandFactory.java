@@ -1,30 +1,7 @@
 package command.factory;
 
 import command.Command;
-import command.impl.AddOrderCommand;
-import command.impl.AddProductCommand;
-import command.impl.AddProductToBasketCommand;
-import command.impl.ChangeAvatarCommand;
-import command.impl.ChangeBanStatusCommand;
-import command.impl.ChangeEmailCommand;
-import command.impl.ChangePasswordCommand;
-import command.impl.ChangeUserStatusCommand;
-import command.impl.DeleteProductCommand;
-import command.impl.EditProductCommand;
-import command.impl.GetAllDepartmentsCommand;
-import command.impl.GetAllNewsCommand;
-import command.impl.GetAllOrdersCommand;
-import command.impl.GetAllProductsCommand;
-import command.impl.GetAllUsersCommand;
-import command.impl.GetBasketProductsCommand;
-import command.impl.GetUserCommand;
-import command.impl.GetUserOrdersCommand;
-import command.impl.ProcessOrderCommand;
-import command.impl.RemoveProductFromBasketCommand;
-import command.impl.RestorePasswordCommand;
-import command.impl.SendImageCommand;
-import command.impl.SignInCommand;
-import command.impl.SignUpCommand;
+import command.impl.*;
 import util.cooperation.ClientRequest;
 import util.cooperation.ServerResponse;
 
@@ -88,6 +65,8 @@ public class CommandFactory {
                 return new ChangeUserStatusCommand(request, response);
             case "getAllNews":
                 return new GetAllNewsCommand(request, response);
+            case "cancelOrder":
+                return new CancelOrderCommand(request, response);
         }
         throw new RuntimeException();
     }

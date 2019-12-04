@@ -84,4 +84,19 @@ public class OrderJpaRepository implements OrderRepository {
             throw new RepositoryException(e);
         }
     }
+
+    @Override
+    public void remove(Order order) throws RepositoryException {
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+            session.remove(order);
+            transaction.commit();
+        } catch (HibernateException e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            throw new RepositoryException(e);
+        }
+    }
 }

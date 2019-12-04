@@ -37,8 +37,8 @@ public class ClientHandler implements Runnable {
                     ServerResponse response = command.execute();
                     sendData(response);
                 } catch (CommandException e) {
-                    sendData(new ServerResponse(null, true));
-                    System.out.println(e.getMessage());
+                    String[] messages = e.getMessage().split(": ");
+                    sendData(new ServerResponse(null, true, messages[messages.length - 1]));
                 }
             } catch (SocketException e) {
                 continueRunning = false;

@@ -93,7 +93,7 @@ public class UserServiceImpl implements UserService {
                 Basket basket = new Basket(user, new ArrayList<>());
                 basketRepository.add(basket);
             } else {
-                throw new ServiceException("Пользователь с таким логином и/или адресом эл. почты" +
+                throw new ServiceException("Пользователь с таким логином и/или адресом эл. почты " +
                         "уже зарегистрирован! Пожалуйста, повторите ввод.");
             }
         } catch (RepositoryException e) {
@@ -273,6 +273,11 @@ public class UserServiceImpl implements UserService {
             double orderSum = products.stream()
                     .mapToDouble(Product::getPrice)
                     .sum();
+            if (orderSum >= 500) {
+                orderSum *= 0.9;
+            } else if (orderSum >= 200) {
+                orderSum *= 0.95;
+            }
             productMap.forEach((product, amount) -> {
                 product.setAmount(product.getAmount() - amount);
                 try {
@@ -293,6 +298,26 @@ public class UserServiceImpl implements UserService {
     public List<Order> getOrders(int userId) throws ServiceException {
         try {
             return orderRepository.getByUserId(userId);
+        } catch (RepositoryException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public void cancelOrder(int orderId) throws ServiceException {
+        try {
+            Order order = orderRepository.get(orderId);
+            List<Product> products = order.getProducts();
+            orderRepository.remove(order);
+            products.forEach(product -> {
+                try {
+                    Product actual = productRepository.get(product.getProductId());
+                    actual.setAmount(actual.getAmount() + 1);
+                    productRepository.update(actual);
+                } catch (RepositoryException e) {
+                    e.printStackTrace();
+                }
+            });
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
